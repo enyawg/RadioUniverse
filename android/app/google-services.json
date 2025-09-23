@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "608501070280",
+    "project_id": "radiouniverse-deb24",
+    "storage_bucket": "radiouniverse-deb24.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608501070280:android:117bbeeb114a7c9830a8fd",
+        "android_client_info": {
+          "package_name": "com.example.radio_universe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoUD0mTQRimllCrR07JE91hdN0uSPxr-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608501070280:android:a764cfb61a4c89b730a8fd",
+        "android_client_info": {
+          "package_name": "com.radiouniverse.radio_universe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoUD0mTQRimllCrR07JE91hdN0uSPxr-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
