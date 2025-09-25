@@ -221,9 +221,12 @@ Radio Universe continues playing when you:
   - Changed stream URL
   - Geo-blocked content
   - Incompatible stream format
+  - Network blocking streaming services (ISP/firewall)
 - **Note**: With 35,000+ stations, some are always unavailable
 - **Solution**: Simply try another station - it's normal!
-- ✅ **NEW**: Emergency fallback stations automatically available when API fails
+- ⚠️ **UPDATE Sept 23**: Radio-Browser API experiencing connectivity issues
+- ⚠️ **UPDATE Sept 23**: Some networks blocking all radio streams
+- **Workaround**: Try cellular data instead of WiFi
 
 ### Premium Not Persisting:
 - ✅ **FIXED** (Sept 23, 2025): Premium status now persists properly

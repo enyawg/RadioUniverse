@@ -36,6 +36,9 @@ class DataService {
 
   /// Check if user has premium features
   bool get hasPremiumFeatures => _subscriptionService.hasPremiumFeatures;
+  
+  /// Get current API server name
+  String get currentApiServer => _radioAPI?.currentServer ?? 'N/A';
 
   Future<List<Station>> getAllStations() async {
     print('getAllStations called with hasPremiumFeatures: $hasPremiumFeatures');

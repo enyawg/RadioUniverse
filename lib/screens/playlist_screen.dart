@@ -406,10 +406,13 @@ class _PlaylistStationCard extends StatelessWidget {
   Widget _buildDefaultImage(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primaryContainer,
-      child: Icon(
-        Icons.radio,
-        size: 32,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      child: Center(
+        child: Image.asset(
+          'lib/assets/images/ru-logo2.png',
+          width: 50,
+          height: 50,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

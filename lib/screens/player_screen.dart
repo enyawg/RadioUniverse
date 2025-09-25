@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/station.dart';
 import '../providers/player_provider.dart';
+import '../services/favorites_service.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -12,7 +13,23 @@ class PlayerScreen extends StatefulWidget {
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
-  bool _isFavorite = false;
+  final FavoritesService _favoritesService = FavoritesService();
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesService.addListener(_onFavoritesChanged);
+  }
+
+  @override
+  void dispose() {
+    _favoritesService.removeListener(_onFavoritesChanged);
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,10 +179,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget _buildDefaultArtwork() {
     return Container(
       color: Theme.of(context).colorScheme.primaryContainer,
-      child: Icon(
-        Icons.radio,
-        size: 120,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      child: Center(
+        child: Image.asset(
+          'lib/assets/images/ru-logo2.png',
+          width: 160,
+          height: 160,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
@@ -219,13 +239,31 @@ class _PlayerScreenState extends State<PlayerScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+          icon: Icon(
+            _favoritesService.isFavorite(playerProvider.currentStation!.id) 
+                ? Icons.favorite 
+                : Icons.favorite_border,
+            color: _favoritesService.isFavorite(playerProvider.currentStation!.id) 
+                ? Colors.red 
+                : null,
+          ),
           iconSize: 32,
-          onPressed: () {
-            setState(() {
-              _isFavorite = !_isFavorite;
-            });
-            // TODO: Save to favorites
+          onPressed: () async {
+            final station = playerProvider.currentStation!;
+            final wasAdded = await _favoritesService.toggleFavorite(station);
+            
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasAdded 
+                        ? 'Added ${station.name} to playlist'
+                        : 'Removed ${station.name} from playlist',
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            }
           },
         ),
         const SizedBox(width: 24),

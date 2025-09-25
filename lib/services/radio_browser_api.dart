@@ -70,6 +70,13 @@ class RadioBrowserAPI {
   late final Dio _dio;
   String _currentBaseUrl = _apiServers[0];
   
+  /// Get the current API server being used
+  String get currentServer {
+    // Extract just the server name from URL (e.g., "de1" from "https://de1.api.radio-browser.info/json")
+    final match = RegExp(r'https://(\w+)\.api').firstMatch(_currentBaseUrl);
+    return match?.group(1)?.toUpperCase() ?? 'Unknown';
+  }
+  
   void initialize() {
     _dio = Dio(BaseOptions(
       baseUrl: _currentBaseUrl,

@@ -1,0 +1,10 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Debug -sdk iphoneos -derivedDataPath build clean build 2
+
+User defaults from command line:
+    IDEDerivedDataPathOverride = /Users/wayneg/~~RadioUniverse/RadioUniverse/ios/build
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    SDKROOT = iphoneos18.2
+

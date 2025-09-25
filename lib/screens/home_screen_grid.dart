@@ -261,7 +261,7 @@ class _HomeScreenGridState extends State<HomeScreenGrid> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
-                            'lib/assets/images/ru-logo.png',
+                            'lib/assets/images/ru-logo2.png',
                             height: 40,
                             width: 40,
                           ),
@@ -597,10 +597,13 @@ class _StationGridItem extends StatelessWidget {
   Widget _buildDefaultImage(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primaryContainer,
-      child: Icon(
-        Icons.radio,
-        size: 32,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      child: Center(
+        child: Image.asset(
+          'lib/assets/images/ru-logo2.png',
+          width: 60,
+          height: 60,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

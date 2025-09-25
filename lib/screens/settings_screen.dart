@@ -140,6 +140,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: subscriptionService.hasPremiumFeatures ? Colors.green : Colors.blue,
                     ),
                   ),
+                  if (subscriptionService.hasPremiumFeatures)
+                    ListTile(
+                      title: const Text('API Server'),
+                      subtitle: Text('Currently using: ${_dataService.currentApiServer}'),
+                      leading: const Icon(Icons.dns, color: Colors.purple),
+                      trailing: Chip(
+                        label: Text(
+                          _dataService.currentApiServer,
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        backgroundColor: Colors.purple.withOpacity(0.2),
+                      ),
+                    ),
                   // EMERGENCY PREMIUM BUTTON - ALWAYS SHOWS
                   ListTile(
                     title: Text(
