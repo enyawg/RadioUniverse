@@ -2,16 +2,23 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/station.dart';
+import 'subscription_service.dart';
 
 class FavoritesService extends ChangeNotifier {
   static const String _favoritesKey = 'favorite_stations';
-  static const int maxFavorites = 20;
+  static const int maxFavoritesPremium = 20;
+  static const int maxFavoritesFree = 2;
   
   static final FavoritesService _instance = FavoritesService._internal();
   factory FavoritesService() => _instance;
   FavoritesService._internal();
 
   List<Station> _favorites = [];
+  final SubscriptionService _subscriptionService = SubscriptionService();
+  
+  /// Get maximum favorites based on subscription
+  int get maxFavorites => 
+      _subscriptionService.hasPremiumFeatures ? maxFavoritesPremium : maxFavoritesFree;
   
   /// Get all favorite stations
   List<Station> get favorites => List.unmodifiable(_favorites);

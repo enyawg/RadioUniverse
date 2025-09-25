@@ -19,6 +19,10 @@ import 'providers/player_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/data_service.dart';
 import 'services/subscription_service.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'config/stripe_config.dart';
+import 'services/app_lifecycle_service.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,18 +49,6 @@ void main() async {
       androidShowNotificationBadge: true,
       androidStopForegroundOnPause: true, // Must be true when androidNotificationOngoing is true
     );
-    
-    // Temporarily disable CarPlay/Android Auto to fix Firebase issues
-    // AudioService.init(
-    //   builder: () => CarPlayAudioHandler(),
-    //   config: const AudioServiceConfig(
-    //     androidNotificationChannelId: 'com.waynegardner.radioUniverse.audio',
-    //     androidNotificationChannelName: 'Radio Universe',
-    //     androidNotificationOngoing: true,
-    //     androidShowNotificationBadge: true,
-    //     androidStopForegroundOnPause: true,
-    //   ),
-    // );
   }
   
   // Initialize Firebase with error handling
@@ -90,8 +82,46 @@ void main() async {
   try {
     await SubscriptionService().initialize();
     print('✅ SubscriptionService initialized with premium: ${SubscriptionService().hasPremiumFeatures}');
+    
+    // Initialize CarPlay/Android Auto only for premium users
+    if (!kIsWeb && SubscriptionService().hasPremiumFeatures) {
+      print('✅ Initializing CarPlay for Pro user');
+      await AudioService.init(
+        builder: () => CarPlayAudioHandler(),
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.waynegardner.radioUniverse.audio',
+          androidNotificationChannelName: 'Radio Universe',
+          androidNotificationOngoing: true,
+          androidShowNotificationBadge: true,
+          androidStopForegroundOnPause: true,
+        ),
+      );
+    } else if (!kIsWeb) {
+      print('⚠️ CarPlay requires Pro subscription');
+    }
   } catch (e) {
     print('❌ SubscriptionService error: $e');
+  }
+  
+  // Initialize Stripe with test publishable key
+  try {
+    Stripe.publishableKey = StripeConfig.publishableKeyTest;
+    await Stripe.instance.applySettings();
+    print('✅ Stripe initialized with test key');
+  } catch (e) {
+    print('❌ Stripe initialization error: $e');
+  }
+  
+  // Initialize app lifecycle service for background playback control
+  AppLifecycleService().initialize();
+  print('✅ App lifecycle service initialized');
+  
+  // Initialize Google Mobile Ads
+  try {
+    await MobileAds.instance.initialize();
+    print('✅ Google Mobile Ads initialized');
+  } catch (e) {
+    print('❌ Google Mobile Ads initialization error: $e');
   }
   
   runApp(const RadioUniverseApp());

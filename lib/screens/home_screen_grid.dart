@@ -9,6 +9,7 @@ import '../services/data_service.dart';
 import '../services/favorites_service.dart';
 import '../services/subscription_service.dart';
 import '../providers/player_provider.dart';
+import '../widgets/ad_banner_widget.dart';
 
 class HomeScreenGrid extends StatefulWidget {
   const HomeScreenGrid({super.key});
@@ -353,6 +354,26 @@ class _HomeScreenGridState extends State<HomeScreenGrid> {
                     ),
                   ),
               ],
+            ),
+          ),
+          
+          // Ad Banner for free users (above mini player)
+          Positioned(
+            bottom: 90, // Above mini player
+            left: 0,
+            right: 0,
+            child: Consumer<SubscriptionService>(
+              builder: (context, subscriptionService, child) {
+                if (!subscriptionService.hasPremiumFeatures) {
+                  return Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: const Center(
+                      child: AdBannerWidget(),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ),
           

@@ -6,6 +6,13 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6038481989373307~9000331816</string>
 	<key>CFBundleDisplayName</key>
 	<string>Radio Universe</string>
 	<key>CFBundleExecutable</key>

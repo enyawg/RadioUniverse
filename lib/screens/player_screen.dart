@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../models/station.dart';
 import '../providers/player_provider.dart';
 import '../services/favorites_service.dart';
+import '../services/subscription_service.dart';
+import '../widgets/ad_banner_widget.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -98,6 +100,21 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         ],
                       ),
                     ),
+                  ),
+                  // Ad Banner for free users
+                  Consumer<SubscriptionService>(
+                    builder: (context, subscriptionService, child) {
+                      if (!subscriptionService.hasPremiumFeatures) {
+                        return Container(
+                          padding: const EdgeInsets.only(bottom: 16, top: 8),
+                          color: Theme.of(context).colorScheme.surface,
+                          child: const Center(
+                            child: AdBannerWidget(),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ],
               ),

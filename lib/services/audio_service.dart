@@ -5,6 +5,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/station.dart';
 import '../utils/player_state.dart' as app_state;
+import 'subscription_service.dart';
+import 'audio_ad_service.dart';
 
 class RadioPlayerService {
   static final RadioPlayerService _instance = RadioPlayerService._internal();
@@ -12,6 +14,7 @@ class RadioPlayerService {
   RadioPlayerService._internal();
 
   late AudioPlayer _audioPlayer;
+  final AudioAdService _adService = AudioAdService();
   
   // Stream controllers
   final _stationController = BehaviorSubject<Station?>();
@@ -36,6 +39,12 @@ class RadioPlayerService {
 
   Future<void> initialize() async {
     _audioPlayer = AudioPlayer();
+    await _adService.initialize();
+    
+    // Set up periodic ad callback
+    _adService.onPeriodicAdRequired = () async {
+      await _playPeriodicAd();
+    };
     
     // Listen to player state changes
     _audioPlayer.playerStateStream.listen((state) {
@@ -73,10 +82,19 @@ class RadioPlayerService {
   Future<void> playStation(Station station) async {
     try {
       _playerStateController.add(app_state.PlayerState.loading);
+      
+      // Check if we should play an ad first
+      if (await _adService.shouldPlayAd()) {
+        await _playStationChangeAd();
+      }
+      
       _stationController.add(station);
 
       // Stop current playback if any
       await stop();
+      
+      // Start tracking listening session for periodic ads
+      _adService.startListeningSession();
 
       // Set the audio source with enhanced metadata
       await _audioPlayer.setAudioSource(
@@ -141,6 +159,7 @@ class RadioPlayerService {
     try {
       await _audioPlayer.stop();
       _playerStateController.add(app_state.PlayerState.stopped);
+      _adService.stopListeningSession();
     } catch (e) {
       _errorController.add('Failed to stop: ${e.toString()}');
     }
@@ -175,6 +194,120 @@ class RadioPlayerService {
     _playerStateController.close();
     _volumeController.close();
     _errorController.close();
+    _adService.stopListeningSession();
+  }
+  
+  // Audio Ad Methods
+  
+  /// Play ad before station change
+  Future<void> _playStationChangeAd() async {
+    try {
+      final ad = _adService.getAdToPlay();
+      _playerStateController.add(app_state.PlayerState.loading);
+      
+      // Play the ad
+      await _audioPlayer.setAudioSource(
+        AudioSource.uri(
+          Uri.parse(ad.audioUrl),
+          tag: MediaItem(
+            id: ad.id,
+            title: ad.title,
+            album: 'Advertisement',
+            artist: 'Radio Universe',
+            duration: Duration(seconds: ad.durationSeconds),
+          ),
+        ),
+      );
+      
+      await _audioPlayer.play();
+      
+      // Wait for ad to complete
+      await _audioPlayer.playerStateStream.firstWhere(
+        (state) => state.processingState == ProcessingState.completed,
+      );
+      
+      await _adService.markAdPlayed();
+      
+    } catch (e) {
+      print('Error playing ad: $e');
+      // Don't block station playback if ad fails
+    }
+  }
+  
+  /// Play periodic interruption ad
+  Future<void> _playPeriodicAd() async {
+    if (!isPlaying || currentStation == null) return;
+    
+    try {
+      // Save current position if stream supports it
+      final currentStationBackup = currentStation;
+      
+      // Fade out current station
+      await _fadeOut();
+      
+      // Play ad
+      final ad = _adService.getAdToPlay();
+      _playerStateController.add(app_state.PlayerState.loading);
+      
+      await _audioPlayer.setAudioSource(
+        AudioSource.uri(
+          Uri.parse(ad.audioUrl),
+          tag: MediaItem(
+            id: ad.id,
+            title: ad.title,
+            album: 'Advertisement',
+            artist: 'Radio Universe',
+            duration: Duration(seconds: ad.durationSeconds),
+          ),
+        ),
+      );
+      
+      await _audioPlayer.play();
+      
+      // Wait for ad to complete
+      await _audioPlayer.playerStateStream.firstWhere(
+        (state) => state.processingState == ProcessingState.completed,
+      );
+      
+      await _adService.markAdPlayed();
+      
+      // Resume the station
+      if (currentStationBackup != null) {
+        await playStation(currentStationBackup);
+        await _fadeIn();
+      }
+      
+    } catch (e) {
+      print('Error playing periodic ad: $e');
+      // Try to resume station if ad fails
+      if (currentStation != null) {
+        await playStation(currentStation!);
+      }
+    }
+  }
+  
+  /// Fade out audio smoothly
+  Future<void> _fadeOut() async {
+    final startVolume = _audioPlayer.volume;
+    const steps = 10;
+    const duration = Duration(milliseconds: 500);
+    
+    for (int i = 0; i < steps; i++) {
+      await _audioPlayer.setVolume(startVolume * (1 - i / steps));
+      await Future.delayed(Duration(milliseconds: duration.inMilliseconds ~/ steps));
+    }
+  }
+  
+  /// Fade in audio smoothly
+  Future<void> _fadeIn() async {
+    const targetVolume = 0.7;
+    const steps = 10;
+    const duration = Duration(milliseconds: 500);
+    
+    for (int i = 0; i <= steps; i++) {
+      await _audioPlayer.setVolume(targetVolume * (i / steps));
+      await Future.delayed(Duration(milliseconds: duration.inMilliseconds ~/ steps));
+    }
   }
 }
 
