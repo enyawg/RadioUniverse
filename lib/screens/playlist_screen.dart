@@ -120,7 +120,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       Expanded(
                         child: Text(
                           'My Playlist',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: TextStyle(
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

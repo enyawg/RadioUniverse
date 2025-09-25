@@ -79,8 +79,8 @@ class SearchScreenState extends State<SearchScreen> {
                 padding: const EdgeInsets.only(left: 12.0, right: 8.0),
                 child: Image.asset(
                   'lib/assets/images/ru-logo2.png',
-                  height: 24,
-                  width: 24,
+                  height: 35,
+                  width: 35,
                 ),
               ),
               Expanded(
@@ -89,9 +89,9 @@ class SearchScreenState extends State<SearchScreen> {
                   focusNode: _searchFocusNode,
                   style: const TextStyle(fontSize: 16),
                   decoration: InputDecoration(
-                    hintText: 'Search stations, artists, genres...',
+                    hintText: 'Search stations, artists',
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 20),

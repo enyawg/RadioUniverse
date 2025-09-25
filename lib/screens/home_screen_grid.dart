@@ -189,7 +189,7 @@ class _HomeScreenGridState extends State<HomeScreenGrid> {
                           Text(
                             'Radio Universe',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
