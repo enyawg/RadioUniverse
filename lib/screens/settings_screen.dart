@@ -49,7 +49,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'lib/assets/images/ru-logo2.png',
+              height: 40,
+              width: 40,
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Settings',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
       ),
       body: ListView(
         children: [

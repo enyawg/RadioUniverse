@@ -171,110 +171,90 @@ class _HomeScreenGridState extends State<HomeScreenGrid> {
                 // Header
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Radio Universe',
-                                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(width: 8),
-                                Consumer<SubscriptionService>(
-                                  builder: (context, subscriptionService, child) {
-                                    if (subscriptionService.hasPremiumFeatures) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.amber,
-                                              Colors.amber.shade700,
-                                            ],
-                                          ),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.stars,
-                                              color: Colors.white,
-                                              size: 12,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              subscriptionService.isInFreeTrial ? 'TRIAL' : 'PRO',
-                                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                    return const SizedBox.shrink();
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Consumer<SubscriptionService>(
-                              builder: (context, subscriptionService, child) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _dataService.getStationCountInfo(),
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: subscriptionService.hasPremiumFeatures 
-                                          ? Colors.green 
-                                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                      ),
-                                    ),
-                                    Text(
-                                      'Grid: ${_crossAxisCount}×${_mainAxisCount} (${_itemsPerPage} stations)',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Logo and version
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
+                      // Top row with logo, title, and PRO badge all aligned
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          // Logo
                           Image.asset(
                             'lib/assets/images/ru-logo2.png',
                             height: 40,
                             width: 40,
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(width: 12),
+                          // Title
                           Text(
-                            'v1.0.0',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              fontSize: 10,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            'Radio Universe',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
+                          const Spacer(),
+                          // PRO badge on the right
+                          Consumer<SubscriptionService>(
+                            builder: (context, subscriptionService, child) {
+                              if (subscriptionService.hasPremiumFeatures) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.black,
+                                        size: 12,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        'PRO',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
                         ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Station info below
+                      Consumer<SubscriptionService>(
+                        builder: (context, subscriptionService, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _dataService.getStationCountInfo(),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: subscriptionService.hasPremiumFeatures 
+                                    ? Colors.green 
+                                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                ),
+                              ),
+                              Text(
+                                'Grid: ${_crossAxisCount}×${_mainAxisCount} (${_itemsPerPage} stations)',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),

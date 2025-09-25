@@ -13,7 +13,7 @@ RadioUniverse is a Flutter-based radio streaming application for iOS and Android
 - **Audio**: just_audio + audio_service for background playback
 - **State Management**: Provider pattern + SharedPreferences
 - **Platform Integration**: CarPlay (iOS), Android Auto
-- **Monetization**: Google AdMob (planned)
+- **Monetization**: Google AdMob + Stripe Subscriptions + Audio Ads
 - **HTTP Client**: Dio with caching and error handling
 
 ## Key Features
@@ -287,10 +287,15 @@ await Firebase.initializeApp(
 - **Debug Tools**: Premium activation button for testing in debug mode
 
 ### ⚠️ **Known Issues**
+- **Xcode Build Caching**: Header changes not reflecting without full rebuild
 - **Station Connection Errors**: Normal with 35,000+ stations database
-  - Some stations are temporarily offline, overloaded, or geo-blocked
-  - Solution: Simply try another station
-  - Future: Could implement stream URL testing before playback
+- **30-40 minute builds**: Avoid `flutter clean` unless absolutely necessary
+  
+### 📅 **September 26, 2025 Updates**
+- Implemented complete Free/Pro tier system
+- Added AdMob banner + audio ads  
+- Integrated Stripe payments
+- Updated all screen headers with logos
 
 ### ✅ **Current Status (September 2025)**
 - **App is 99% working!** All core features functioning properly

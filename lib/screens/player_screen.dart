@@ -138,9 +138,21 @@ class _PlayerScreenState extends State<PlayerScreen> {
               DefaultTabController.of(context)?.animateTo(0);
             },
           ),
-          Text(
-            'Now Playing',
-            style: Theme.of(context).textTheme.titleMedium,
+          Row(
+            children: [
+              Image.asset(
+                'lib/assets/images/ru-logo2.png',
+                height: 30,
+                width: 30,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Now Playing',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),

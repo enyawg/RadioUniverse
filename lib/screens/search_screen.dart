@@ -66,25 +66,51 @@ class SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          focusNode: _searchFocusNode,
-          decoration: InputDecoration(
-            hintText: 'Search stations, artists, genres...',
-            border: InputBorder.none,
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      _performSearch('');
-                    },
-                  )
-                : null,
+        title: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
-          onChanged: _performSearch,
-          autofocus: false,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+                child: Image.asset(
+                  'lib/assets/images/ru-logo2.png',
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  style: const TextStyle(fontSize: 16),
+                  decoration: InputDecoration(
+                    hintText: 'Search stations, artists, genres...',
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, size: 20),
+                            onPressed: () {
+                              _searchController.clear();
+                              _performSearch('');
+                            },
+                          )
+                        : null,
+                  ),
+                  onChanged: _performSearch,
+                  autofocus: false,
+                ),
+              ),
+            ],
+          ),
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
       ),
       body: _buildBody(),
     );

@@ -109,41 +109,30 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.playlist_play,
-                        size: 28,
-                        color: Theme.of(context).colorScheme.primary,
+                      Image.asset(
+                        'lib/assets/images/ru-logo2.png',
+                        height: 40,
+                        width: 40,
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        'My Playlist',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          'My Playlist',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const Spacer(),
                       Consumer<SubscriptionService>(
                         builder: (context, subscriptionService, child) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '${_favorites.length}/20',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                                ),
-                              ),
-                              if (!subscriptionService.hasPremiumFeatures && _favorites.length >= 20)
-                                Text(
-                                  'Limit reached',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.orange,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                            ],
+                          final maxFavorites = subscriptionService.hasPremiumFeatures ? 20 : 2;
+                          return Text(
+                            '${_favorites.length}/$maxFavorites',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
                           );
                         },
                       ),
